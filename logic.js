@@ -49,7 +49,7 @@ function listItems(){
                 currentStock = chosenItem.stock_quantity;
                 totalPrice = amount.itemQuantity * chosenItem.price;
                 if(amount.itemQuantity > currentStock){
-                    console.log("Your order exceeds whats in stock, cannot complete order.");
+                    console.log("The amount exceeds whats in stock, cannot complete your order.");
                     newOrder();
 
                 }else{
