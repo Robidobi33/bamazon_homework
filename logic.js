@@ -113,7 +113,9 @@ function listItems(){
                 console.log("-----------------------------------------------");
                 listItems();
             }
-            else{console.log("Have a great day!");}
+            else{console.log("Have a great day!");
+                start();
+                }
         });
     }
 }//end listItems()
