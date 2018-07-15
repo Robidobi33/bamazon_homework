@@ -11,13 +11,35 @@ var connection = mySQL.createConnection({
 
 connection.connect(function(err){
     if(err) throw err;
-    listItems();
+    //listItems();
+    start();
 });
+
+function start(){
+    inquirer.prompt([
+        {
+            name: "selection",
+            message: "What would you like to do?",
+            choices: ["Buy Item", "Add to Inventory"],
+            type: "list"
+        }
+    ]).then(function(pick){
+        if(pick.selection === "Buy Item"){
+            listItems();
+            //console.log(pick.selection);
+        }else if(pick.selection === "Add to Inventory"){
+            //console.log(pick.selection);
+            addStock();
+        }
+        
+    });
+    
+}
 
 function listItems(){
     connection.query("SELECT * FROM products", function(err, res){
         for(i=0;i<res.length;i++){
-            console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].price + " | " + res[i].stock_quantity);
+            console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | "+ "$" + res[i].price + " | " + res[i].stock_quantity);
             if(err)throw err;
         }
         
@@ -49,7 +71,7 @@ function listItems(){
                 currentStock = chosenItem.stock_quantity;
                 totalPrice = amount.itemQuantity * chosenItem.price;
                 if(amount.itemQuantity > currentStock){
-                    console.log("The amount exceeds whats in stock, cannot complete your order.");
+                    console.log("Your order exceeds whats in stock, cannot complete order.");
                     newOrder();
 
                 }else{
@@ -78,22 +100,66 @@ function listItems(){
 });
 
 
-function newOrder(){
+    function newOrder(){
+        
+        inquirer.prompt([
+            {
+                name: "createOrder",
+                message: "Would you like to place a new order? y/n",
+                type: "input"
+            }
+        ]).then(function(confirmation){
+            if (confirmation.createOrder === "y"){
+                console.log("-----------------------------------------------");
+                listItems();
+            }
+            else{console.log("Have a great day!");}
+        });
+    }
+}//end listItems()
+function addStock(){
+    connection.query("SELECT * FROM products", function(err, res){
+        for(i=0;i<res.length;i++){
+            console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | "+ "$" + res[i].price + " | " + res[i].stock_quantity);
+            if(err)throw err;
+        }
+        console.log("----------------------------------------------------------------");
     inquirer.prompt([
         {
-            name: "createOrder",
-            message: "Would you like to place a new order? y/n",
+            name: "item",
+            message: "What item would you like to restock?",
             type: "input"
         }
-    ]).then(function(confirmation){
-        if (confirmation.createOrder === "y"){
-            console.log("-----------------------------------------------");
-            listItems();
-        }
-        else{console.log("Have a great day!");}
+    ]).then(function(choice){
+        selectedItem = res[(choice.item)-1];
+        console.log("You have selected " + selectedItem.product_name + ", there are " + selectedItem.stock_quantity + " in stock.");
+        inquirer.prompt([
+            {
+                name: "itemNum",
+                message: "How many items would you like to add to inventory?",
+                type: "input"
+            }
+            
+        ]).then(function(newAmount){
+            //var inventory;
+            var newInventory;
+            newInventory = selectedItem.stock_quantity;
+            newInventory = newInventory + parseInt(newAmount.itemNum);
+            connection.query(
+            "UPDATE products SET ? WHERE ?",
+            [
+                {
+                    stock_quantity: newInventory
+                },
+                {
+                    item_id: choice.item
+                }
+            ] 
+            );
+            console.log("There are now " + newInventory + " " + selectedItem.product_name + " in stock.");
+            start();
+        });
     });
+});
 }
-
-}
-
 
