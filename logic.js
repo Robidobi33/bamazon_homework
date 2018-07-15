@@ -103,21 +103,7 @@ function listItems(){
 
 
     function newOrder(){
-        
-        inquirer.prompt([
-            {
-                name: "createOrder",
-                message: "Would you like to place a new order? y/n",
-                type: "confirm"
-            }
-        ]).then(function(confirmation){
-            if (confirmation.confirm === true){
-               console.log("\n----------------------------------------------------------------");
-                listItems();
-            }
-            else{console.log("Have a great day!");}
-            start();
-        });
+       start();
     }
 }//end listItems()
 function addStock(){
