@@ -24,6 +24,7 @@ function start(){
             type: "list"
         }
     ]).then(function(pick){
+        console.log("----------------------------------------------------------------");
         if(pick.selection === "Buy Item"){
             listItems();
             //console.log(pick.selection);
@@ -51,6 +52,7 @@ function listItems(){
                 type: "input",
                 message: "Please select the item ID you would like to buy"
             },
+
             
         ]).then(function(answer){
 
@@ -106,16 +108,15 @@ function listItems(){
             {
                 name: "createOrder",
                 message: "Would you like to place a new order? y/n",
-                type: "input"
+                type: "confirm"
             }
         ]).then(function(confirmation){
-            if (confirmation.createOrder === "y"){
-                console.log("-----------------------------------------------");
+            if (confirmation.confirm === true){
+               console.log("\n----------------------------------------------------------------");
                 listItems();
             }
-            else{console.log("Have a great day!");
-                start();
-                }
+            else{console.log("Have a great day!");}
+            start();
         });
     }
 }//end listItems()
