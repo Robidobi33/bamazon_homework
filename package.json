@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/Robidobi33/bamazon_homework/issues"
   },
-  "homepage": "https://github.com/Robidobi33/bamazon_homework#readme"
+  "homepage": "https://github.com/Robidobi33/bamazon_homework#readme",
+  "dependencies": {
+    "inquirer": "^6.0.0",
+    "mysql": "^2.15.0"
+  },
+  "devDependencies": {}
 }
